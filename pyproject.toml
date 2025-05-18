@@ -5,7 +5,7 @@ description = "Confluence plugin backend to generate ux/ui images through an LLM
 authors = [
     {name = "MateoMazziniOngay", email = "mateomazzini610@gmail.com"},
 ]
-dependencies = ["fastapi>=0.115.12", "uvicorn>=0.34.2", "python-dotenv>=1.1.0"]
+dependencies = ["fastapi>=0.115.12", "uvicorn>=0.34.2", "python-dotenv>=1.1.0", "openai>=1.79.0"]
 requires-python = ">=3.12,<4.0"
 readme = "README.md"
 license = {text = "MIT"}

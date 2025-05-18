@@ -9,5 +9,5 @@ def root():
     return {"message": "FastAPI backend is up"}
 
 app.include_router(router)
-app.mount("/static", StaticFiles(directory="src/confluence_plugin_be/static"), name="static")
+app.mount("/images", StaticFiles(directory="src/confluence_plugin_be/images"), name="images")
 

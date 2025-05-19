@@ -5,8 +5,8 @@ This project is a backend service built with **FastAPI** to generate UI images f
 ## ✅ What This Backend Does
 
 - Accepts a text-based requirement via an HTTP POST request.
-- (Eventually) generates a UI image using OpenAI's API (currently mocked).
-- Returns a URL to the generated UI image stored in a `images/` folder.
+- Generates a UI image using OpenAI's API.
+- Returns a URL to the generated image saved under `src/confluence_plugin_be/images/`.
 - Provides a `/docs` page for testing via Swagger UI.
 
 
@@ -16,17 +16,18 @@ This project is a backend service built with **FastAPI** to generate UI images f
 confluence-plugin-be/
 ├── src/
 │ └── confluence_plugin_be/
-│ ├── main.py # App entry point (FastAPI instance)
-│ ├── api/
-│ │ └── routes.py # API endpoints (e.g., /generate-ui)
-│ ├── models/
-│ │ └── request_models.py# Request validation schemas
-│ ├── services/
-│ │ └── ui_generator.py # Business logic (OpenAI integration)
-│ ├── images/ # Folder for returned/generated images
-│ └── config.py # Loads secrets like OPENAI_API_KEY
-├── tests/
-│ └── test_routes.py # (To be implemented)
+│   ├── api/
+│   │   └── routes.py         # API endpoints (e.g., /generate-ui)
+│   ├── models/
+│   │   ├── requests/
+│   │   │   └── ui_request_model.py   # Request validation schema
+│   │   └── responses/
+│   │       └── ui_response_model.py  # Response schema
+│   ├── services/
+│   │   └── ui_generator.py   # Calls OpenAI API and saves images
+│   ├── config.py             # Loads secrets like OPENAI_API_KEY
+│   └── main.py               # App entry point
+├── tests/                    # currently empty
 ├── .env # Stores API keys (not committed)
 ├── pyproject.toml # PDM config and dependencies
 └── README.md
@@ -39,11 +40,11 @@ confluence-plugin-be/
 POST /generate-ui
      │
      ▼
-api/routes.py           → Accepts the request and calls the service
-models/request_models.py→ Validates the request body using Pydantic
-services/ui_generator.py→ Generates or returns a UI image path (mock)
-config.py               → Loads the OpenAI API key from .env
-images/                 → Contains mock_ui.png (or future generated files)
+api/routes.py                      → Accepts the request and calls the service
+models/requests/ui_request_model.py→ Validates the request body using Pydantic
+services/ui_generator.py           → Calls OpenAI to create an image and save it
+config.py                          → Loads the OpenAI API key from .env
+images/                            → Stores the generated image files
 
 ```
 
@@ -51,7 +52,7 @@ Example Response
 ```text
 {
   "status": "success",
-  "image_url": "/images/mock_ui.png"
+  "image_url": "/images/<generated-filename>.png"
 }
 ```
 
@@ -82,5 +83,5 @@ http://127.0.0.1:8000/docs
 - Keep logic separated: routing, validation, and business logic belong in their own modules.
 
 ## 🔜 Next steps
-- Replace mock logic with actual image generation using OpenAI API.
-- Save generated images dynamically in images/.
+- Improve prompt generation for the OpenAI requests.
+- Add automated tests for API routes and image saving.

@@ -5,6 +5,7 @@ This project is a backend service built with **FastAPI** to generate UI images f
 ## ✅ What This Backend Does
 
 - Accepts a text-based requirement via an HTTP POST request.
+- Optional parameters allow specifying typography and a color palette for the generated UI.
 - Generates a UI image using OpenAI's API.
 - Returns a URL to the generated image saved under `src/confluence_plugin_be/images/`.
 - Provides a `/docs` page for testing via Swagger UI.
@@ -46,6 +47,15 @@ services/ui_generator.py           → Calls OpenAI to create an image and save 
 config.py                          → Loads the OpenAI API key from .env
 images/                            → Stores the generated image files
 
+```
+
+Example Request
+```json
+{
+  "requirement": "Pantalla de inicio para aplicación de seguimiento de gastos.",
+  "typography": "Roboto, 14px",
+  "palette": "#0070f3 (azul principal), #ff4081 (botones), #f0f0f0 (fondo)"
+}
 ```
 
 Example Response

@@ -8,27 +8,35 @@ from src.confluence_plugin_be.config import OPENAI_API_KEY
 IMG_DIR = Path(__file__).resolve().parent.parent / "images"
 
 
-def generate_ui_image(requirement: str) -> str:
-    prompt = process_requirement(requirement)
+def generate_ui_image(
+    requirement: str, typography: str | None = None, palette: str | None = None
+) -> str:
+    """Generate a UI image given a requirement and optional style hints."""
+    prompt = process_requirement(requirement, typography=typography, palette=palette)
     image_b64 = request_image(prompt)
     filename = save_image(image_b64)
     return f"/images/{filename}"
 
-def process_requirement(requirement: str) -> str:
-    # TO DO:    Need to change this, create some prompt engeneering or something xd
-    #           I was thinking of something like the folder structure of Diore and Sofi previous project
-    #           where they had multiple prompt templates, so maybe we could select them by parameters and 
-    #           enhance them with the requirement input to make them more specific.
-    prompt_with_requirement = """You are a minimalistic mobile UX/UI designer. 
-                                Now you are working a new feature based 
-                                on the following requirement: """ + requirement + """
-                                Create a UI image for this requirement.
-                                The image should be minimalistic,
-                                modern and easy to use.
-                                The image should be the size of a mobile screen.
-                                The background is always white.
-                                """
-    return prompt_with_requirement
+
+def process_requirement(
+    requirement: str, *, typography: str | None = None, palette: str | None = None
+) -> str:
+    """Build the prompt text for the image generation request."""
+    prompt_lines = [
+        "You are a mobile UX/UI designer.",
+        f"Requirement: {requirement}",
+    ]
+    if typography:
+        prompt_lines.append(f"Typography: {typography}")
+    if palette:
+        prompt_lines.append(f"Color palette: {palette}")
+
+    prompt_lines.append(
+        "Create a UI mockup that follows these guidelines and is suitable for a Confluence page."
+    )
+
+    return "\n".join(prompt_lines)
+
 
 def request_image(prompt: str) -> str:
     response = openai.images.generate(
@@ -39,6 +47,7 @@ def request_image(prompt: str) -> str:
         response_format="b64_json",
     )
     return response.data[0].b64_json
+
 
 def save_image(b64_image: str) -> str:
     image_data = base64.b64decode(b64_image)

@@ -1,18 +1,21 @@
 import openai
 import uuid
 import base64
+import os
 from pathlib import Path
-
 from src.confluence_plugin_be.config import OPENAI_API_KEY
 
 IMG_DIR = Path(__file__).resolve().parent.parent / "images"
+IMG_DIR.mkdir(parents=True, exist_ok=True)
+
+BACKEND_BASE_URL = os.getenv("BACKEND_BASE_URL", "http://localhost:8000")
 
 
 def generate_ui_image(requirement: str) -> str:
     prompt = process_requirement(requirement)
     image_b64 = request_image(prompt)
     filename = save_image(image_b64)
-    return f"/images/{filename}"
+    return f"{BACKEND_BASE_URL}/images/{filename}"
 
 def process_requirement(requirement: str) -> str:
     # TO DO:    Need to change this, create some prompt engeneering or something xd

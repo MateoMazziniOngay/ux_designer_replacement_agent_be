@@ -19,7 +19,6 @@ client = OpenAI()
 
 def generate_ui_image(requirement: str, ui_type: UIType) -> str:
     prompt = load_prompt_template(requirement, ui_type)
-    print("[DEBUG] Generated prompt:", prompt)
     image_b64 = request_image(prompt)
     filename = save_image(image_b64)
     return f"{BACKEND_BASE_URL}/images/{filename}"
@@ -31,11 +30,14 @@ def load_prompt_template(requirement: str, ui_type: UIType) -> str:
     return template.replace("{{requirement}}", requirement)
 
 def request_image(prompt: str) -> str:
-    response = client.responses.create(
-        model="gpt-4.1-mini",
-        input=prompt,
-        tools=[{"type": "image_generation"}],
+    response = client.images.generate(
+        model="gpt-image-1",
+        prompt=prompt,
+        n=1,
+        quality="medium",
+        size="1024x1024"        
     )
+    print(prompt)
     return response.data[0].b64_json
 
 def save_image(b64_image: str) -> str:

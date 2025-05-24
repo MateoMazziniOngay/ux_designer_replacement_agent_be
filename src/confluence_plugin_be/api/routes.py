@@ -9,7 +9,7 @@ router = APIRouter()
 async def generate_ui(req: UIRequest):
     try:
         print("[DEBUG] Received requirement:", req.requirement)
-        image_url = generate_ui_image(req.requirement)
+        image_url = generate_ui_image(req.requirement, req.ui_type)
         return {"status": "success", "image_url": image_url}
     except Exception as e:
         print("[ERROR] Failed to generate UI image:", str(e))
